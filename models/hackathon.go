@@ -3,13 +3,13 @@ package models
 import "time"
 
 type Hackathon struct {
-	Id                   int
-	Name                 string
-	Description          string
-	Location             string
-	StartDate            time.Time
-	TeamSize             int
-	MaxNumberOfTeams     int
-	OpenForSubscriptions bool
-	Teams                []Team
+	Id                int       `json:"id"`
+	Name              string    `json:"name"`
+	Description       string    `json:"description"`
+	Location          string    `json:"location"`
+	StartDate         time.Time `json:"startDate"`
+	TeamSize          int       `json:"teamSize"`
+	NumberOfTeams     int       `json:"numberOfTeams"`
+	SubscriptionsOpen bool      `json:"subscriptions"`
+	Teams             []Team    `json:"teams"`
 }
