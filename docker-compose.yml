@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:12.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: passwd
+      POSTGRES_DB: bird_encyclopedia
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  db-data:
