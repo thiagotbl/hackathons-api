@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/go-chi/chi"
@@ -31,6 +34,12 @@ type fakeRepository struct{}
 
 func (*fakeRepository) GetHackathons() ([]models.Hackathon, error) {
 	return fakeHackathons, nil
+}
+
+type brokenRepository struct{}
+
+func (*brokenRepository) GetHackathons() ([]models.Hackathon, error) {
+	return nil, errors.New("something went wrong reading hackathons")
 }
 
 func allHackathonsRequest() *httptest.ResponseRecorder {
@@ -78,6 +87,36 @@ func TestAllHackathonsReturnsCorrectData(t *testing.T) {
 			"invalid hackathons list: got %v want %v",
 			result,
 			expectedResult,
+		)
+	}
+}
+
+func TestAllHackathonsRepositoryFails(t *testing.T) {
+	subject := HackathonsController{&brokenRepository{}}
+
+	req := httptest.NewRequest("GET", "/hackathons", nil)
+	recorder := httptest.NewRecorder()
+
+	r := chi.NewRouter()
+	r.HandleFunc("/hackathons", subject.AllHackathons)
+	r.ServeHTTP(recorder, req)
+
+	bodyBytes, _ := ioutil.ReadAll(recorder.Body)
+	message := strings.TrimSpace(string(bodyBytes))
+
+	if recorder.Code != http.StatusInternalServerError {
+		t.Errorf(
+			"wrong status code: got %v want %v",
+			recorder.Code,
+			http.StatusInternalServerError,
+		)
+	}
+
+	if message != "something went wrong reading hackathons" {
+		t.Errorf(
+			`unexpected error message: got "%v" want "%v"`,
+			message,
+			"something went wrong reading hackathons",
 		)
 	}
 }
