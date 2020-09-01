@@ -4,7 +4,7 @@ An API to manage hackatons made with Go!
 
 ### TODO / Questions
 * Filenames format. Should I name files using "_"?
-* Authentication - we need participants and organizers
+* Authentication and Authorization - we need participants and organizers
 
 ### Endpoints
 * `/`
@@ -12,4 +12,7 @@ An API to manage hackatons made with Go!
 
 ### Migrations:
 docker run -v /Users/thiago.lopes/dev/wild/hackathons-api/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database "postgresql://postgres:passwd@localhost/hackathons_api?sslmode=disable" up
-1/u create_hackathons_table
+
+### Protos Generation
+<!-- protoc --go_out=. ./protos/processor_message.proto -->
+protoc --go_out=$GOPATH/src ./protos/hackathon.proto

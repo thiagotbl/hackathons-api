@@ -1,0 +1,76 @@
+teamA = {
+    "name": "Team A",
+    "hackathon_id": 1,
+    "confirmed": true,
+    "participants": [
+        {
+            "name": "participant TA A",
+            "email": "participant_a@gmail.com",
+            "photo_url": "www.avatars.com/partA",
+            "phone": "+55 13 99999 6666",
+            "t_shirt_size": "L"
+        },
+        {
+            "name": "participant TA B",
+            "email": "participant_b@gmail.com",
+            "photo_url": "www.avatars.com/partB",
+            "phone": "+55 13 99999 7777",
+            "t_shirt_size": "S"
+        }
+    ]
+}
+
+teamB = {
+    "name": "Team B",
+    "hackathon_id": 1,
+    "confirmed": true,
+    "participants": [
+        {
+            "name": "participant TB 1",
+            "email": "tb_1@gmail.com",
+            "photo_url": "www.avatars.com/anime1",
+            "phone": "+55 13 98888 6666",
+            "t_shirt_size": "L"
+        },
+        {
+            "name": "participant TB 2",
+            "email": "tb_2@gmail.com",
+            "photo_url": "www.avatars.com/tb2",
+            "phone": "+55 13 99999 6623",
+            "t_shirt_size": "M"
+        }
+    ]
+}
+
+teamC = {
+    "name": "Team C",
+    "hackathon_id": 1,
+    "confirmed": true,
+    "participants": [
+        {
+            "name": "participant TC 1",
+            "email": "tc_1@gmail.com",
+            "photo_url": "www.avatars.com/tc1",
+            "phone": "+55 13 98888 6666",
+            "t_shirt_size": "L"
+        },
+        {
+            "name": "participant TC 2",
+            "email": "tc_2@gmail.com",
+            "photo_url": "www.avatars.com/tc2",
+            "phone": "+55 13 98888 6623",
+            "t_shirt_size": "XL"
+        }
+    ]
+}
+
+hackathon = {
+    "ID": "1",
+    "name": "Hack 1",
+    "description": "The very firs hack!",
+    "location": "São Paulo",
+    "start_date": "10/09/2020",
+    "team_size": 2,
+    "number_of_teams": 20,
+    "subscriptions_open": false
+  }

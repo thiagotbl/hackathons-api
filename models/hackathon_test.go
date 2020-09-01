@@ -3,11 +3,13 @@ package models
 import (
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func validHackathon() Hackathon {
 	return Hackathon{
-		Id:                1,
+		ID:                1,
 		Name:              "Sampa Hack",
 		Description:       "Not just another hackathon!",
 		Location:          "São Paulo",
@@ -20,11 +22,10 @@ func validHackathon() Hackathon {
 
 func TestValidateAllFieldsFilled(t *testing.T) {
 	hackathon := validHackathon()
+
 	err := hackathon.Validate()
 
-	if err != nil {
-		t.Errorf("a hackathon with all fields filled should be valid")
-	}
+	require.Nil(t, err)
 }
 
 func TestValidateNoName(t *testing.T) {
@@ -33,16 +34,8 @@ func TestValidateNoName(t *testing.T) {
 
 	err := hackathon.Validate()
 
-	if err == nil {
-		t.Errorf("hackaton with no name should return an error")
-	}
-	if err != nil && err.Error() != "name should not be empty" {
-		t.Errorf(
-			`unexpected error message: got "%v" want "%v"`,
-			err.Error(),
-			"name should not be empty",
-		)
-	}
+	require.NotNil(t, err, "hackathon with no name should return an Error")
+	require.Equal(t, "name should not be empty", err.Error())
 }
 
 func TestValidateNoLocation(t *testing.T) {
@@ -51,16 +44,8 @@ func TestValidateNoLocation(t *testing.T) {
 
 	err := hackathon.Validate()
 
-	if err == nil {
-		t.Errorf("hackathon with no location should return an error")
-	}
-	if err != nil && err.Error() != "location should not be empty" {
-		t.Errorf(
-			`unexpected error: got "%v" want "%v"`,
-			err.Error(),
-			"location should not be empty",
-		)
-	}
+	require.NotNil(t, err, "hackathon with no location should return an error")
+	require.Equal(t, "location should not be empty", err.Error())
 }
 
 func TestValidateNoStartDate(t *testing.T) {
@@ -69,16 +54,8 @@ func TestValidateNoStartDate(t *testing.T) {
 
 	err := hackathon.Validate()
 
-	if err == nil {
-		t.Errorf("hackathon with an invalid start date should return an error")
-	}
-	if err != nil && err.Error() != "invalid start date" {
-		t.Errorf(
-			`unexpected error: got "%v" want "%v"`,
-			err.Error(),
-			"invalid start date",
-		)
-	}
+	require.NotNil(t, err, "hackathon with an invalid start date should return an error")
+	require.Equal(t, "invalid start date", err.Error())
 }
 
 func TestValidateInvalidTeamSize(t *testing.T) {
@@ -87,16 +64,8 @@ func TestValidateInvalidTeamSize(t *testing.T) {
 
 	err := hackathon.Validate()
 
-	if err == nil {
-		t.Errorf("hackathon with invalid team size should return an error")
-	}
-	if err != nil && err.Error() != "team size should be greater than zero" {
-		t.Errorf(
-			`unexpected error: got "%v" want "%v"`,
-			err.Error(),
-			"team size should be greater than zero",
-		)
-	}
+	require.NotNil(t, err, "hackathon with invalid team size should return an error")
+	require.Equal(t, "team size should be greater than zero", err.Error())
 }
 
 func TestValidateInvalidNumberOfTeams(t *testing.T) {
@@ -105,14 +74,6 @@ func TestValidateInvalidNumberOfTeams(t *testing.T) {
 
 	err := hackathon.Validate()
 
-	if err == nil {
-		t.Errorf("hackathon with invalid number of teams should return an error")
-	}
-	if err != nil && err.Error() != "number of teams should be greater than zero" {
-		t.Errorf(
-			`unexpected error: got "%v" want "%v"`,
-			err.Error(),
-			"number of teams should be greater than zero",
-		)
-	}
+	require.NotNil(t, err, "hackathon with invalid number of teams should return an error")
+	require.Equal(t, "number of teams should be greater than zero", err.Error())
 }

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "protos/team.proto";
+import "protos/hackathon.proto";
+import "protos/error.proto";
+
+option go_package = "github.com/thiagotbl/hackathons-api/protos";
+
+service ParticipantService {
+    rpc ListHackathons(ListHackathonsRequest) returns (ListHackathonsResponse) {}
+    rpc SubscribeTeam(SubscribeTeamRequest) returns (SubscribeTeamResponse) {}
+    rpc CancelTeamSubscription(CancelTeamSubscriptionRequest) returns (CancelTeamSubscriptionResponse) {}
+}
+
+message ListHackathonsRequest {}
+message ListHackathonsResponse {
+    repeated Hackathon hackathons = 1;
+}
+
+message SubscribeTeamRequest {
+    Team team = 1;
+}
+message SubscribeTeamResponse {
+    Error error = 1;
+}
+
+message CancelTeamSubscriptionRequest {
+    int64 ID = 1;
+}
+message CancelTeamSubscriptionResponse {
+    Error error = 1;
+}

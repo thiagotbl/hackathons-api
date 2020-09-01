@@ -1,4 +1,4 @@
-package viewmodels
+package views
 
 import (
 	"github.com/thiagotbl/hackatons-api/models"

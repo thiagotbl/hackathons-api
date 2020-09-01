@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/thiagotbl/hackathons-api/protos";
+
+message Hackathon {
+	int64 ID = 1;
+	string name = 2;
+	string description = 3;
+	string location = 4;
+	string start_date = 5;
+	int32 team_size = 6;
+	int32 number_of_teams = 7;
+	bool subscriptions_open = 8;
+}
+

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "github.com/thiagotbl/hackathons-api/protos";
+
+message Team {
+    int64 ID = 1;
+    string name = 2;
+    bool confirmed = 3;
+    int64 hackathon_id = 4;
+    repeated Participant participants = 5;
+}
+
+message Participant {
+    int64 ID = 1;
+    string name = 2;
+    string email = 3;
+    string photo_url = 4;
+    string phone = 5;
+    T_SHIRT_SIZE t_shirt_size = 6;
+    int64 team_id = 7;
+}
+
+enum T_SHIRT_SIZE {
+    S = 0;
+    M = 1;
+    L = 2;
+    XL = 3;
+}

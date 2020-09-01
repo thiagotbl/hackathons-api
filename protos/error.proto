@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option go_package = "github.com/thiagotbl/hackathons-api/protos";
+
+message Error {
+    string Code = 1;
+    string Message = 2;
+}

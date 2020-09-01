@@ -1,19 +1,17 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
-	"net/http"
+	"net"
 
-	"github.com/thiagotbl/hackatons-api/controllers"
+	"github.com/go-pg/pg"
+	"github.com/thiagotbl/hackatons-api/api"
+	"google.golang.org/grpc"
 
-	"github.com/thiagotbl/hackatons-api/repositories"
-
-	"github.com/thiagotbl/hackatons-api/infra"
-
-	"github.com/go-chi/chi"
 	_ "github.com/lib/pq"
+	pb "github.com/thiagotbl/hackatons-api/protos"
+	"github.com/thiagotbl/hackatons-api/repositories"
 )
 
 // TODO router config file
@@ -22,36 +20,48 @@ func main() {
 	db := connectDB()
 	defer db.Close()
 
-	postgresDB := infra.PostgresDb{Conn: db}
-	repository := repositories.HackathonRepository{IDb: &postgresDB}
-	controller := controllers.HackathonsController{&repository}
+	hackathonsRepo := repositories.NewHackathonsRepository(db)
+	// controller := controllers.HackathonsController{Repository: &repository}
 
-	r := chi.NewRouter()
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		hackathons, _ := repository.GetHackathons()
+	// r := chi.NewRouter()
+	// r.Use(middleware.RequestID)
+	// r.Use(middleware.Logger)
 
-		for _, hackathon := range hackathons {
-			fmt.Fprintln(w, hackathon.Name+", "+hackathon.Location)
-		}
-	})
-	r.Get("/hackathons", controller.AllHackathons)
+	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	hackathons, _ := repository.GetHackathons()
 
-	http.ListenAndServe(":8080", r)
+	// 	for _, hackathon := range hackathons {
+	// 		fmt.Fprintln(w, hackathon.Name+", "+hackathon.Location)
+	// 	}
+	// })
+	// r.Get("/hackathons", controller.AllHackathons)
+	// r.Post("/hackathons", controller.CreateHackathon)
+
+	// http.ListenAndServe(":8080", r)
+
+	organizerServer := api.NewOrganizerServer(hackathonsRepo)
+	participantServer := api.NewParticipantServer(hackathonsRepo)
+
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", 8081))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	gRPCServer := grpc.NewServer()
+
+	pb.RegisterOrganizerServiceServer(gRPCServer, organizerServer)
+	pb.RegisterParticipantServiceServer(gRPCServer, participantServer)
+
+	gRPCServer.Serve(listener)
 }
 
-func connectDB() *sql.DB {
-	db, err := sql.Open(
-		"postgres",
-		"postgresql://postgres:passwd@localhost/hackathons_api?sslmode=disable",
-	)
+func connectDB() *pg.DB {
+	opt, err := pg.ParseURL("postgresql://postgres:passwd@localhost/hackathons_api?sslmode=disable")
 	if err != nil {
-		log.Fatal("Error connecting to database", err)
+		panic(err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		log.Fatal("db ping failed: ", err)
-	}
+	db := pg.Connect(opt)
 
 	return db
 }

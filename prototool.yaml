@@ -1,0 +1,20 @@
+# prototool configuration.
+# See
+# https://github.com/uber/prototool/blob/dev/etc/config/example/prototool.yaml
+# for reference.
+
+excludes:
+    - vendor/
+
+protoc:
+  version: 3.11.3
+  includes:
+    - .
+
+generate:
+  go_options:
+    import_path: github.com/thiagotbl/hackathons-api
+  plugins:
+    - name: go
+      flags: paths=source_relative,plugins=grpc
+      output: .

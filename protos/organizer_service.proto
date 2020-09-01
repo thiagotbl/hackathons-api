@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+import "protos/hackathon.proto";
+import "protos/team.proto";
+import "protos/error.proto";
+
+option go_package = "github.com/thiagotbl/hackathons-api/protos";
+
+service OrganizerService {
+	rpc CreateHackathon(CreateHackathonRequest) returns (CreateHackathonResponse) {}
+	rpc GetHackathons(GetHackathonsRequest) returns (GetHackathonsResponse) {}
+	rpc UpdateHackathon(UpdateHackathonRequest) returns (UpdateHackathonResponse) {}
+	rpc CloseSubscriptions(CloseSubscriptionsRequest) returns (CloseSubscriptionsResponse) {}
+	rpc OpenSubscriptions(OpenSubscriptionsRequest) returns (OpenSubscriptionsResponse) {}
+	rpc DeleteHackathon(DeleteHackathonRequest) returns (DeleteHackathonResponse) {}
+
+	rpc GetHackathonTeams(GetHackathonTeamsRequest) returns (GetHackathonTeamsResponse) {}
+	rpc GetHackathonTeamsByName(GetHackathonTeamsByNameRequest) returns (GetHackathonTeamsByNameResponse) {}
+}
+
+message CreateHackathonRequest {
+	Hackathon hackathon = 1;
+}
+message CreateHackathonResponse {
+	Hackathon hackathon = 1;
+	Error error = 2;
+}
+
+message UpdateHackathonRequest {
+	Hackathon hackathon = 1;
+}
+message UpdateHackathonResponse {
+	Hackathon hackathon = 1;
+	Error error = 2;
+}
+
+message GetHackathonsRequest {}
+message GetHackathonsResponse {
+	repeated Hackathon hackathons = 1;
+	Error error = 2;
+}
+
+message CloseSubscriptionsRequest {
+	int64 ID = 1;
+}
+message CloseSubscriptionsResponse {}
+
+message OpenSubscriptionsRequest {
+	int64 ID = 1;
+}
+message OpenSubscriptionsResponse {}
+
+message DeleteHackathonRequest {
+	int64 ID = 1;
+}
+message DeleteHackathonResponse {}
+
+message GetHackathonTeamsRequest {
+	int64 hackathon_id = 1;
+}
+message GetHackathonTeamsResponse {
+	repeated Team teams = 1;
+}
+
+message GetHackathonTeamsByNameRequest {
+	int64 hackathon_id = 1;
+	int32 page = 2;
+	int32 limit = 3;
+	enum ORDER {
+		ASC = 0;
+		DESC = 1;
+	}
+	ORDER order = 4;
+}
+message GetHackathonTeamsByNameResponse {
+	repeated Team teams = 1;
+}

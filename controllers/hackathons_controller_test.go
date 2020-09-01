@@ -12,7 +12,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/google/go-cmp/cmp"
 	"github.com/thiagotbl/hackatons-api/models"
-	"github.com/thiagotbl/hackatons-api/viewmodels"
+	"github.com/thiagotbl/hackatons-api/views"
 )
 
 var fakeHackathons = []models.Hackathon{
@@ -36,10 +36,18 @@ func (*fakeRepository) GetHackathons() ([]models.Hackathon, error) {
 	return fakeHackathons, nil
 }
 
+func (*fakeRepository) SaveHackathon(*models.Hackathon) error {
+	return nil
+}
+
 type brokenRepository struct{}
 
 func (*brokenRepository) GetHackathons() ([]models.Hackathon, error) {
 	return nil, errors.New("something went wrong reading hackathons")
+}
+
+func (*brokenRepository) SaveHackathon(*models.Hackathon) error {
+	return nil
 }
 
 func allHackathonsRequest() *httptest.ResponseRecorder {
@@ -77,10 +85,10 @@ func TestAllHackathonsReturnsCorrectHeaders(t *testing.T) {
 func TestAllHackathonsReturnsCorrectData(t *testing.T) {
 	recorder := allHackathonsRequest()
 
-	var result viewmodels.SingleList
+	var result views.SingleList
 	json.NewDecoder(recorder.Body).Decode(&result)
 
-	expectedResult := viewmodels.SingleList{Data: fakeHackathons}
+	expectedResult := views.SingleList{Data: fakeHackathons}
 
 	if !cmp.Equal(result, expectedResult) {
 		t.Errorf(

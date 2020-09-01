@@ -1,0 +1,1 @@
+ALTER TABLE participants RENAME COLUMN photo TO photo_url;
