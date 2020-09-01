@@ -65,12 +65,21 @@ teamC = {
 }
 
 hackathon = {
-    "ID": "1",
     "name": "Hack 1",
-    "description": "The very firs hack!",
+    "description": "A amazing hackathon",
+    "location": "Rio de Janeiro",
+    "start_date": "10/01/2021",
+    "team_size": 4,
+    "number_of_teams": 10,
+    "subscriptions_open": false
+  }
+
+  hack2 = {
+    "name": "Hack 2",
+    "description": "A humble hackathon",
     "location": "São Paulo",
-    "start_date": "10/09/2020",
+    "start_date": "10/11/2020",
     "team_size": 2,
-    "number_of_teams": 20,
+    "number_of_teams": 2,
     "subscriptions_open": false
   }

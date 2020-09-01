@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"net"
@@ -8,7 +10,11 @@ import (
 	"github.com/go-pg/pg"
 	"github.com/thiagotbl/hackatons-api/api"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
+	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	_ "github.com/lib/pq"
 	pb "github.com/thiagotbl/hackatons-api/protos"
 	"github.com/thiagotbl/hackatons-api/repositories"
@@ -47,7 +53,11 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	gRPCServer := grpc.NewServer()
+	gRPCServer := grpc.NewServer(
+		grpc.UnaryInterceptor(grpcMiddleware.ChainUnaryServer(
+			grpc_auth.UnaryServerInterceptor(authFunc),
+		)),
+	)
 
 	pb.RegisterOrganizerServiceServer(gRPCServer, organizerServer)
 	pb.RegisterParticipantServiceServer(gRPCServer, participantServer)
@@ -64,4 +74,17 @@ func connectDB() *pg.DB {
 	db := pg.Connect(opt)
 
 	return db
+}
+
+func authFunc(ctx context.Context) (context.Context, error) {
+	token, err := grpc_auth.AuthFromMD(ctx, "basic")
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "no basic header found: %v", err)
+	}
+	auth := "thiago" + ":" + "123"
+	authEncoded := base64.StdEncoding.EncodeToString([]byte(auth))
+	if token != authEncoded {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid auth credentials: %v", err)
+	}
+	return ctx, nil
 }
